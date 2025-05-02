@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Pet, Minha Responsa</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fef9f4;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      margin-top: 20px;
+    }
+    .score {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🐾 Meu Pet, Minha Responsa 🐾</h1>
+    <div id="game">
+      <p>Bem-vindo! Você está prestes a adotar um pet. Escolha seu animal:</p>
+      <button onclick="adoptPet('Cachorro')">Adotar Cachorro</button>
+      <button onclick="adoptPet('Gato')">Adotar Gato</button>
+    </div>
+    <div id="score" class="score"></div>
+  </div>
+
+  <audio id="barkSound" src="https://www.soundjay.com/animal/dog-barking-01.mp3"></audio>
+  <audio id="meowSound" src="https://www.soundjay.com/animal/cat-meow-1.mp3"></audio>
+
+  <script>
+    let pet = '';
+    let stage = 0;
+    let score = 0;
+
+    function updateScore(points) {
+      score += points;
+      document.getElementById('score').innerText = `Pontuação: ${score}`;
+    }
+
+    function adoptPet(type) {
+      pet = type;
+      stage = 1;
+      updateScore(10);
+      const img = pet === 'Cachorro' ? 'https://cdn.pixabay.com/photo/2016/02/19/11/53/dog-1207816_1280.jpg' : 'https://cdn.pixabay.com/photo/2017/11/09/21/41/cat-2934720_1280.jpg';
+      playSound();
+      document.getElementById('game').innerHTML = `
+        <p>Você adotou um <strong>${pet}</strong>! Agora, leve-o para vacinar.</p>
+        <img src="${img}" alt="${pet}">
+        <button onclick="nextStage()">Vacinar</button>
+      `;
+    }
+
+    function playSound() {
+      if (pet === 'Cachorro') {
+        document.getElementById('barkSound').play();
+      } else {
+        document.getElementById('meowSound').play();
+      }
+    }
+
+    function nextStage() {
+      stage++;
+      let message = '';
+      let img = '';
+      let points = 10;
+      switch(stage) {
+        case 2:
+          message = `Vacinação completa! Agora vamos vermifugar o ${pet.toLowerCase()}.`;
+          img = 'https://cdn.pixabay.com/photo/2016/03/27/19/46/pet-1284307_1280.jpg';
+          break;
+        case 3:
+          message = `Vermifugação feita! Vamos cuidar da higiene do seu pet.`;
+          img = 'https://cdn.pixabay.com/photo/2017/02/01/22/02/puppy-2036186_1280.jpg';
+          break;
+        case 4:
+          message = `Seu ${pet.toLowerCase()} está limpinho! Hora de brincar um pouco com ele.`;
+          img = 'https://cdn.pixabay.com/photo/2015/03/26/09/41/dog-690176_1280.jpg';
+          break;
+        case 5:
+          message = `Seu ${pet.toLowerCase()} se divertiu muito! Agora ele parece um pouco abatido. O que fazer?`;
+          img = 'https://cdn.pixabay.com/photo/2016/02/19/11/53/dog-1207816_1280.jpg';
+          break;
+        case 6:
+          message = `O veterinário disse que foi só cansaço. Que tal alimentar seu pet agora?`;
+          img = 'https://cdn.pixabay.com/photo/2017/09/25/13/12/cat-2785074_1280.jpg';
+          break;
+        case 7:
+          message = `Seu ${pet.toLowerCase()} está bem alimentado! Vamos dar uma volta juntos.`;
+          img = 'https://cdn.pixabay.com/photo/2016/02/19/10/00/puppy-1207814_1280.jpg';
+          break;
+        case 8:
+          message = `Que passeio incrível! Seu ${pet.toLowerCase()} está saudável, feliz e muito bem cuidado! 🐶🐱<h2>🏆 Certificado de Tutor Responsável 🏆</h2>`;
+          img = 'https://cdn.pixabay.com/photo/2016/11/29/03/35/dog-1861839_1280.jpg';
+          break;
+        default:
+          message = `Fim do jogo.`;
+          points = 0;
+      }
+      updateScore(points);
+      if (stage <= 8) {
+        document.getElementById('game').innerHTML = `
+          <p>${message}</p>
+          <img src="${img}" alt="Etapa ${stage}">
+          ${stage < 8 ? '<button onclick="nextStage()">Próxima Etapa</button>' : ''}
+        `;
+      }
+    }
+  </script>
+</body>
+</html>
